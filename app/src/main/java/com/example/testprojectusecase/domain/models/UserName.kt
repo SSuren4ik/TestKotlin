@@ -1,0 +1,5 @@
+package com.example.testprojectusecase.domain.models
+
+class UserName(val firstName: String, val lastName: String) {
+
+}
