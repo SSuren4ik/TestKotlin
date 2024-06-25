@@ -14,6 +14,7 @@ import com.example.testprojectusecase.R
 
 class MainActivity : AppCompatActivity() {
 
+
     private val userRepository by lazy(LazyThreadSafetyMode.NONE) {
         UserRepositoryImpl(SharedPrefUserStorage(applicationContext))
     }
