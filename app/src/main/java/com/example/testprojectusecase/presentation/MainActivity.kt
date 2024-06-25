@@ -1,38 +1,37 @@
 package com.example.testprojectusecase.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.data.repository.UserRepositoryImpl
+import com.example.data.storage.SharedPrefUserStorage
+import com.example.domain.usecase.GetUserNameUseCase
+import com.example.domain.usecase.SaveUserNameUseCase
 import com.example.testprojectusecase.R
-import com.example.testprojectusecase.data.repository.UserRepositoryImpl
-import com.example.testprojectusecase.domain.models.SaveUserNameParam
-import com.example.testprojectusecase.domain.usecase.GetUserNameUseCase
-import com.example.testprojectusecase.domain.usecase.SaveUserNameUseCase
 
 class MainActivity : AppCompatActivity() {
 
     private val userRepository by lazy(LazyThreadSafetyMode.NONE) {
-        UserRepositoryImpl(
-            applicationContext
-        )
+        UserRepositoryImpl(SharedPrefUserStorage(applicationContext))
     }
     private val saveUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        SaveUserNameUseCase(
-            userRepository
-        )
+        SaveUserNameUseCase(userRepository)
     }
     private val getUserNameUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        GetUserNameUseCase(
-            userRepository
-        )
+        GetUserNameUseCase(userRepository)
     }
+
+    private lateinit var vm: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        Log.e("AAA", "Activity created")
+        vm = MainViewModel()
 
         val dataTextView = findViewById<TextView>(R.id.dataTextView)
         val receiveButton = findViewById<Button>(R.id.receiveButton)
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         sendButton.setOnClickListener {
             val text = dataEditView.text.toString()
-            val param = SaveUserNameParam(text, "last_name")
+            val param = com.example.domain.models.SaveUserNameParam(text, "last_name")
             val result = saveUserNameUseCase.execute(param)
             dataTextView.text = "Saved result is $result"
         }
@@ -50,7 +49,5 @@ class MainActivity : AppCompatActivity() {
             val userName = getUserNameUseCase.execute()
             dataTextView.text = "${userName.firstName} ${userName.lastName}"
         }
-
-
     }
 }

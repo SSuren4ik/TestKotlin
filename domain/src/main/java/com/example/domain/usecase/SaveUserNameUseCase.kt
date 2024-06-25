@@ -1,7 +1,7 @@
-package com.example.testprojectusecase.domain.usecase
+package com.example.domain.usecase
 
-import com.example.testprojectusecase.domain.models.SaveUserNameParam
-import com.example.testprojectusecase.domain.repository.UserRepository
+import com.example.domain.models.SaveUserNameParam
+import com.example.domain.repository.UserRepository
 
 class SaveUserNameUseCase(private val userRepository: UserRepository) {
 
@@ -9,7 +9,6 @@ class SaveUserNameUseCase(private val userRepository: UserRepository) {
         val oldUserName = userRepository.getName()
         if (oldUserName.firstName == param.firstName)
             return true
-
         return userRepository.saveName(param)
     }
 }
